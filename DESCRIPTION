@@ -1,0 +1,15 @@
+Package: RipleyK
+Title: Analyse Data Distribution Using ripley K function
+Version: 0.0.1
+Authors@R: c(
+    person(given = "Tim",
+           family = "Perkins",
+           role = c("aut", "cre", "cph"),
+           email = "tim@theperkins.se",
+           comment = c(ORCID = "0000-0002-5080-1418")))
+Description: Analyses 1-dimensional data, such as dates, in terms of its distribution
+    to classify the distribution as even, random or clustered
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 8.0.0
