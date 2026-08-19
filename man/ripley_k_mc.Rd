@@ -4,16 +4,17 @@
 \alias{ripley_k_mc}
 \title{Monte Carlo calculation for Ripley K function for 1D data}
 \usage{
-ripley_k_mc(n, t, xmin, xmax, weighting = "reflect", nsim = 100)
+ripley_k_mc(n, t, xmin, xmax, edge, nsim)
 }
 \arguments{
 \item{xmin}{Minimum possible for data x.}
 
 \item{xmax}{Maximum possible value for data x.}
 
-\item{weighting}{A character string representing the type of weighting to apply
-to mitigate against edge effects. Allowed values are "none" for no weighting, "reflect" to
-increase the weight of points near xmin and xmax. "cycle" should added in thr future.}
+\item{edge}{A character string representing the type of edge effect compensation
+to apply. The allowed values are "none" for no compensation, "reflect" to
+increase the weight of points near xmin and xmax, and "periodic" to treat the
+values as if they repeat periodically}
 
 \item{nsim}{Number of simulations to run}
 }

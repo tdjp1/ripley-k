@@ -8,9 +8,10 @@
 #' calculated from x
 #' @param xmax Maximum possible value for data x. If xmax i set to NA then the value is
 #' calculcated from x
-#' @param weighting A character string representing the type of weighting to apply
-#' to mitigate against edge effects. Allowed values are "none" for no weighting, "reflect" to
-#' increase the weight of points near xmin and xmax. "cycle" should added in thr future.
+#' @param edge A character string representing the type of edge effect compensation
+#' to apply. The allowed values are "none" for no compensation, "weight" to
+#' increase the weight of points near xmin and xmax, and "periodic" to treat the
+#' values as if they repeat periodically
 #' @param nstep An integer value used to automate the creation of vector of t values
 #'
 #' @export
@@ -20,13 +21,17 @@ ripley_k <- function(
     t = NA,
     xmin = NA,
     xmax = NA,
-    weighting = "reflect",
+    edge = "weight",
     nstep = NA
 ) {
     # Get length of input vector and apply sanity check
     n <- length(x)
     if (n < 2) {
         stop("Too few values to analyse ", n)
+    }
+
+    if (!edge %in% c("weight", "periodic", "none")) {
+        stop("Invalid edge method ", edge)
     }
 
     # Auto create xmin and xmax if not supplied
@@ -55,11 +60,22 @@ ripley_k <- function(
     } else {
         if (anyNA(t)) stop("Invalid vector of values for t")
     }
+
     # Get linear density of points
     lindensity <- n / (xmax - xmin + 1)
 
     # Generate distance matrix
     dm <- dist(x)
+
+    # For periodic edge calculate new dm
+    if (edge == "periodic") {
+        range <- xmax - xmin
+        lower <- x < range / 2
+        x_periodic <- x
+        x_periodic[lower] <- x_periodic[lower] + range
+        dm_periodic <- dist(x_periodic)
+        dm <- pmin(dm, dm_periodic)
+    }
 
     # Setup output data frame
     output <- data.frame(t = t, K = NA, L = NA)
@@ -67,29 +83,27 @@ ripley_k <- function(
     # Look at all values for t
     for (ix in 1:nrow(output)) {
         tt <- output$t[ix]
-        if (weighting == "reflect") {
-            w1 <- 1 - pmin(x - xmin - tt, 0) / tt
-            w2 <- 1 - pmin(xmax - x - tt, 0) / tt
-            w <- pmax(w1, w2)
-        } else if (weighting == "none") {
-            w <- rep(1, n)
-        } else {
-            stop("Invalid weighting mode ", weighting)
-        }
-
-        # Combine weights to form a matrix
-        wm <- matrix(nrow = n, ncol = n)
-        for (i in 1:(n - 1)) {
-            for (j in i:n) {
-                wm[j, i] <- max(w[i], w[j])
-            }
-        }
-        wm <- as.dist(wm)
         dm_t <- as.dist(matrix(
             as.numeric(as.matrix(dm) < tt),
             ncol = n
         ))
-        K <- sum(dm_t * wm) / n / lindensity
+        if (edge == "weight") {
+            w1 <- 1 - pmin(x - xmin - tt, 0) / tt
+            w2 <- 1 - pmin(xmax - x - tt, 0) / tt
+            w <- pmax(w1, w2)
+            # Combine weights to form a matrix
+            wm <- matrix(nrow = n, ncol = n)
+            for (i in 1:(n - 1)) {
+                for (j in i:n) {
+                    wm[j, i] <- max(w[i], w[j])
+                }
+            }
+            wm <- as.dist(wm)
+            K <- sum(dm_t * wm) / n / lindensity
+        } else {
+            K <- sum(dm_t) / n / lindensity
+        }
+
         output$K[ix] <- K
         output$L[ix] <- sqrt(K / pi)
     }

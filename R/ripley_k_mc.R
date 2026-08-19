@@ -4,9 +4,10 @@
 #' random or clustered @param n number of values for analysis @param t vector of windows
 #' @param xmin Minimum possible for data x.
 #' @param xmax Maximum possible value for data x.
-#' @param weighting A character string representing the type of weighting to apply
-#' to mitigate against edge effects. Allowed values are "none" for no weighting, "reflect" to
-#' increase the weight of points near xmin and xmax. "cycle" should added in thr future.
+#' @param edge A character string representing the type of edge effect compensation
+#' to apply. The allowed values are "none" for no compensation, "reflect" to
+#' increase the weight of points near xmin and xmax, and "periodic" to treat the
+#' values as if they repeat periodically
 #' @param nsim Number of simulations to run
 #'
 #' @export
@@ -16,8 +17,8 @@ ripley_k_mc <- function(
     t,
     xmin,
     xmax,
-    weighting = "reflect",
-    nsim = 100
+    edge,
+    nsim
 ) {
     # Some sanity checks
     if (n < 2) {
@@ -36,7 +37,7 @@ ripley_k_mc <- function(
             t = t,
             xmin = xmin,
             xmax = xmax,
-            weighting = weighting
+            edge = edge
         )
         diff <- sum(results$K - results$t)
     })

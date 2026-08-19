@@ -4,7 +4,7 @@
 \alias{ripley_k}
 \title{Ripley K function for 1D data}
 \usage{
-ripley_k(x, t = NA, xmin = NA, xmax = NA, weighting = "reflect", nstep = NA)
+ripley_k(x, t = NA, xmin = NA, xmax = NA, edge = "weight", nstep = NA)
 }
 \arguments{
 \item{x}{vector of values for analysis}
@@ -17,9 +17,10 @@ calculated from x}
 \item{xmax}{Maximum possible value for data x. If xmax i set to NA then the value is
 calculcated from x}
 
-\item{weighting}{A character string representing the type of weighting to apply
-to mitigate against edge effects. Allowed values are "none" for no weighting, "reflect" to
-increase the weight of points near xmin and xmax. "cycle" should added in thr future.}
+\item{edge}{A character string representing the type of edge effect compensation
+to apply. The allowed values are "none" for no compensation, "weight" to
+increase the weight of points near xmin and xmax, and "periodic" to treat the
+values as if they repeat periodically}
 
 \item{nstep}{An integer value used to automate the creation of vector of t values}
 }

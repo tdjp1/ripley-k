@@ -10,9 +10,10 @@
 #' calculated from x
 #' @param xmax Maximum possible value for data x. If xmax i set to NA then the value is
 #' calculcated from x
-#' @param weighting A character string representing the type of weighting to apply
-#' to mitigate against edge effects. Allowed values are "none" for no weighting, "reflect" to
-#' increase the weight of points near xmin and xmax. "cycle" should added in thr future.
+#' @param edge A character string representing the type of edge effect compensation
+#' to apply. The allowed values are "none" for no compensation, "weight" to
+#' increase the weight of points near xmin and xmax, and "periodic" to treat the
+#' values as if they repeat periodically
 #' @param nstep An integer value used to automate the creation of vector of t values
 #'
 #' @export
@@ -22,7 +23,7 @@ ripley_k_stat <- function(
     t = NA,
     xmin = NA,
     xmax = NA,
-    weighting = "reflect",
+    edge = "weight",
     nstep = NA,
     nsim = 100
 ) {
