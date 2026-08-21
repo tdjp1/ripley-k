@@ -4,7 +4,7 @@
 \alias{ripley_k}
 \title{Ripley K function for 1D data}
 \usage{
-ripley_k(x, t = NA, xmin = NA, xmax = NA, edge = "weight", nstep = NA)
+ripley_k(x, t = NA, xmin = NA, xmax = NA, edge, nstep = NA)
 }
 \arguments{
 \item{x}{vector of values for analysis}

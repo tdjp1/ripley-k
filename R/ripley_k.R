@@ -21,7 +21,7 @@ ripley_k <- function(
     t = NA,
     xmin = NA,
     xmax = NA,
-    edge = "weight",
+    edge,
     nstep = NA
 ) {
     # Get length of input vector and apply sanity check
@@ -31,7 +31,11 @@ ripley_k <- function(
     }
 
     if (!edge %in% c("weight", "periodic", "none")) {
-        stop("Invalid edge method ", edge)
+        stop(
+            "Invalid edge method ",
+            edge,
+            " - use none, weight, or periodic"
+        )
     }
 
     # Auto create xmin and xmax if not supplied

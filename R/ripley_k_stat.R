@@ -25,7 +25,7 @@ ripley_k_stat <- function(
     xmax = NA,
     edge = "weight",
     nstep = NA,
-    nsim = 100
+    nsim = 1000
 ) {
     # Get length of input vector and apply sanity check
     n <- length(x)
@@ -60,11 +60,18 @@ ripley_k_stat <- function(
         if (anyNA(t)) stop("Invalid vector of values for t")
     }
 
-    out <- ripley_k(x, t = t, xmin = xmin, xmax = xmax)
+    out <- ripley_k(x, t = t, xmin = xmin, xmax = xmax, edge = edge)
     score <- ripley_k_score(out)
 
     # Run simulation
-    sim <- ripley_k_mc(n, t, xmin = xmin, xmax = xmax, nsim = 1000)
+    sim <- ripley_k_mc(
+        n,
+        t,
+        xmin = xmin,
+        xmax = xmax,
+        edge = edge,
+        nsim = nsim
+    )
     q <- quantile(sim, c(0.05, 0.95))
 
     if (score < q[1]) {

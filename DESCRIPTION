@@ -1,6 +1,6 @@
 Package: RipleyK
 Title: Analyse Data Distribution Using ripley K function
-Version: 0.0.1
+Version: 0.2.0
 Authors@R: c(
     person(given = "Tim",
            family = "Perkins",

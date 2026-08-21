@@ -11,7 +11,7 @@ ripley_k_stat(
   xmax = NA,
   edge = "weight",
   nstep = NA,
-  nsim = 100
+  nsim = 1000
 )
 }
 \arguments{
